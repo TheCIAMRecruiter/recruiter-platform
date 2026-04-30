@@ -4,22 +4,26 @@ const TABS = ["Source", "Pipeline", "Outreach", "Analytics"];
 const STAGES = ["sourced", "contacted", "responded", "interviewed", "offered"];
 
 const BRAND = {
-  navy:        "#1B2A4A",
-  navyLight:   "#243659",
-  red:         "#E8192C",
+  navy:        "#171F37",
+  navyLight:   "#1E2844",
+  red:         "#DD112D",
   bg:          "#F5F6F8",
   white:       "#FFFFFF",
   border:      "#E2E5EC",
-  textPrimary: "#1B2A4A",
+  textPrimary: "#171F37",
   textMuted:   "#6B7896",
 };
 
 const TransmitLogo = () => (
-  <svg width="155" height="34" viewBox="0 0 155 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 5 L5 29 M0 5 L10 5" stroke={BRAND.red} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <text x="16" y="23" fontFamily="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" fontSize="19" fontWeight="700" fill="#FFFFFF" letterSpacing="-0.3">transmit</text>
-    <text x="16" y="32" fontFamily="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" fontSize="8.5" fontWeight="400" fill="rgba(255,255,255,0.55)" letterSpacing="2.5">SECURITY</text>
-  </svg>
+  <img
+    src="https://transmitsecurity.com/wp-content/themes/transmit/assets/images/logo-white.svg"
+    alt="Transmit Security"
+    style={{ height: 32, display: "block" }}
+    onError={e => {
+      e.target.style.display = "none";
+      e.target.nextSibling.style.display = "flex";
+    }}
+  />
 );
 
 const badge = (text, type = "info") => {
