@@ -211,7 +211,19 @@ export default function App() {
     <div style={{ fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", background: BRAND.bg, minHeight: "100vh", color: BRAND.textPrimary }}>
 
       <div style={{ background: BRAND.navy, padding: "0 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 58, borderBottom: `3px solid ${BRAND.red}` }}>
-        <TransmitLogo />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <TransmitLogo />
+          <div style={{ display: "none", alignItems: "center", gap: 8 }}>
+            <svg width="20" height="26" viewBox="0 0 20 26" fill="none">
+              <line x1="10" y1="0" x2="10" y2="26" stroke="#DD112D" strokeWidth="4" strokeLinecap="round"/>
+              <line x1="0" y1="2" x2="20" y2="2" stroke="#DD112D" strokeWidth="4" strokeLinecap="round"/>
+            </svg>
+            <div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", letterSpacing: "-0.3px", lineHeight: 1 }}>transmit</div>
+              <div style={{ fontSize: 8, fontWeight: 400, color: "rgba(255,255,255,0.5)", letterSpacing: "2.5px", marginTop: 2 }}>SECURITY</div>
+            </div>
+          </div>
+        </div>
         <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", letterSpacing: "0.05em", textTransform: "uppercase" }}>Recruiter Platform</span>
       </div>
 
