@@ -182,10 +182,24 @@ export default function App() {
   const generateOutreach = async (c) => {
     setOutreachLoading(true); setOutreachDraft("");
     try {
-      const text = await claudeFetch([{ role: "user", content: `Write a personalized LinkedIn outreach from a recruiter at Transmit Security to ${c.name}, ${c.title} at ${c.company}. Skills: ${c.skills.join(", ")}. Under 120 words, friendly, specific, no buzzwords. Just the message, no quotes.` }], 400);
+      const r = await fetch("/api/openai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          max_tokens: 400,
+          messages: [{ role: "user", content: `Write a personalized LinkedIn outreach from a recruiter at Transmit Security to ${c.name}, ${c.title} at ${c.company}. Skills: ${c.skills.join(", ")}. Under 120 words, friendly, specific, no buzzwords. Just the message, no quotes.` }]
+        })
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || "API error " + r.status);
+      const text = data.content?.find(b => b.type === "text")?.text || "";
+      if (!text) throw new Error("Empty response from OpenAI");
       setOutreachDraft(text);
-    } catch (e) { showMsg("Outreach generation failed.", false); }
-    finally { setOutreachLoading(false); }
+    } catch (e) {
+      showMsg("Outreach failed: " + e.message, false);
+    } finally {
+      setOutreachLoading(false);
+    }
   };
 
   const updateStage = (id, stage) => setCandidates(prev => prev.map(c => c.id === id ? { ...c, stage } : c));
