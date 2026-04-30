@@ -116,7 +116,7 @@ export default function App() {
   };
 
   const claudeFetch = async (messages, max_tokens = 1000) => {
-    const r = await fetch("/api/claude", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens, messages }) });
+    const r = await fetch("/api/openai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens, messages }) });
     const d = await r.json();
     return d.content?.filter(b => b.type === "text").map(b => b.text).join("") || "";
   };
