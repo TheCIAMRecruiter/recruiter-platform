@@ -18,14 +18,14 @@ const TransmitLogo = ({ dark = false }) => {
   const text = dark ? BRAND.navy : "#FFFFFF";
   const sub = dark ? "#6B7896" : "rgba(255,255,255,0.65)";
   return (
-    <svg width="210" height="40" viewBox="0 0 210 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Red "t" mark: block top-left + vertical stem + crossbar */}
+    <svg width="230" height="40" viewBox="-4 0 230 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Red "t" mark */}
       <rect x="0" y="0" width="10" height="10" fill="#DD112D" rx="1"/>
       <rect x="0" y="0" width="3.5" height="30" fill="#DD112D"/>
       <rect x="0" y="10" width="18" height="3.5" fill="#DD112D"/>
       {/* "transmit" wordmark */}
       <text x="24" y="27" fontFamily="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" fontSize="22" fontWeight="800" fill={text} letterSpacing="-0.5">transmit</text>
-      {/* "security" sub-text — offset to the right */}
+      {/* "security" */}
       <text x="105" y="37" fontFamily="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" fontSize="11" fontWeight="400" fill={sub} letterSpacing="0.3">security</text>
     </svg>
   );
@@ -229,7 +229,7 @@ export default function App() {
   return (
     <div style={{ fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", background: BRAND.bg, minHeight: "100vh", color: BRAND.textPrimary }}>
 
-      <div style={{ background: BRAND.navy, padding: "0 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 62, borderBottom: `3px solid ${BRAND.red}` }}>
+      <div style={{ background: BRAND.navy, padding: "0 2rem 0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 62, borderBottom: `3px solid ${BRAND.red}` }}>
         <TransmitLogo dark={false} />
         <span style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Recruiter Platform</span>
       </div>
