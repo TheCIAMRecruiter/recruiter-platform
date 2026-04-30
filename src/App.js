@@ -14,17 +14,22 @@ const BRAND = {
   textMuted:   "#6B7896",
 };
 
-const TransmitLogo = () => (
-  <img
-    src="https://transmitsecurity.com/wp-content/themes/transmit/assets/images/logo-white.svg"
-    alt="Transmit Security"
-    style={{ height: 32, display: "block" }}
-    onError={e => {
-      e.target.style.display = "none";
-      e.target.nextSibling.style.display = "flex";
-    }}
-  />
-);
+const TransmitLogo = ({ dark = false }) => {
+  const text = dark ? BRAND.navy : "#FFFFFF";
+  const sub = dark ? "#6B7896" : "rgba(255,255,255,0.65)";
+  return (
+    <svg width="210" height="40" viewBox="0 0 210 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Red "t" mark: block top-left + vertical stem + crossbar */}
+      <rect x="0" y="0" width="10" height="10" fill="#DD112D" rx="1"/>
+      <rect x="0" y="0" width="3.5" height="30" fill="#DD112D"/>
+      <rect x="0" y="10" width="18" height="3.5" fill="#DD112D"/>
+      {/* "transmit" wordmark */}
+      <text x="24" y="27" fontFamily="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" fontSize="22" fontWeight="800" fill={text} letterSpacing="-0.5">transmit</text>
+      {/* "security" sub-text — offset to the right */}
+      <text x="105" y="37" fontFamily="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" fontSize="11" fontWeight="400" fill={sub} letterSpacing="0.3">security</text>
+    </svg>
+  );
+};
 
 const badge = (text, type = "info") => {
   const s = {
@@ -224,21 +229,9 @@ export default function App() {
   return (
     <div style={{ fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", background: BRAND.bg, minHeight: "100vh", color: BRAND.textPrimary }}>
 
-      <div style={{ background: BRAND.navy, padding: "0 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 58, borderBottom: `3px solid ${BRAND.red}` }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <TransmitLogo />
-          <div style={{ display: "none", alignItems: "center", gap: 8 }}>
-            <svg width="20" height="26" viewBox="0 0 20 26" fill="none">
-              <line x1="10" y1="0" x2="10" y2="26" stroke="#DD112D" strokeWidth="4" strokeLinecap="round"/>
-              <line x1="0" y1="2" x2="20" y2="2" stroke="#DD112D" strokeWidth="4" strokeLinecap="round"/>
-            </svg>
-            <div>
-              <div style={{ fontSize: 17, fontWeight: 700, color: "#fff", letterSpacing: "-0.3px", lineHeight: 1 }}>transmit</div>
-              <div style={{ fontSize: 8, fontWeight: 400, color: "rgba(255,255,255,0.5)", letterSpacing: "2.5px", marginTop: 2 }}>SECURITY</div>
-            </div>
-          </div>
-        </div>
-        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", letterSpacing: "0.05em", textTransform: "uppercase" }}>Recruiter Platform</span>
+      <div style={{ background: BRAND.navy, padding: "0 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 62, borderBottom: `3px solid ${BRAND.red}` }}>
+        <TransmitLogo dark={false} />
+        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Recruiter Platform</span>
       </div>
 
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1.5rem 3rem" }}>
@@ -430,7 +423,10 @@ export default function App() {
             <Card style={{ marginBottom: 12 }}>
               <p style={{ fontSize: 11, color: BRAND.textMuted, margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 500 }}>Select candidate</p>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
-                {candidates.filter(c => !c.outreachSent).slice(0, 6).map(c => (
+                {candidates.length === 0 && (
+                  <p style={{ fontSize: 13, color: BRAND.textMuted }}>No candidates yet — run a search on the Source tab first.</p>
+                )}
+                {candidates.map(c => (
                   <button key={c.id} onClick={() => { setSelectedCandidate(c); setOutreachDraft(""); }} style={{ fontSize: 12, padding: "6px 12px", background: selectedCandidate?.id === c.id ? BRAND.navy : "transparent", color: selectedCandidate?.id === c.id ? "#fff" : BRAND.navy, border: `1px solid ${selectedCandidate?.id === c.id ? BRAND.navy : BRAND.border}`, borderRadius: 8, cursor: "pointer", fontWeight: selectedCandidate?.id === c.id ? 600 : 400 }}>
                     {c.name}
                   </button>
