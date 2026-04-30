@@ -16,10 +16,9 @@ const BRAND = {
 
 const TransmitLogo = () => (
   <img
-    src="/logo.svg"
+    src="/Group-1 (2).svg"
     alt="Transmit Security"
     style={{ height: 34, display: "block" }}
-    onError={e => { e.target.src = "/logo.png"; }}
   />
 );
 
