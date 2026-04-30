@@ -83,7 +83,7 @@ const sampleCandidates = [
 
 export default function App() {
   const [tab, setTab] = useState("Source");
-  const [candidates, setCandidates] = useState(sampleCandidates);
+  const [candidates, setCandidates] = useState([]);
   const [urlInput, setUrlInput] = useState("");
   const [jdInput, setJdInput] = useState("");
   const [inputMode, setInputMode] = useState("url");
@@ -309,6 +309,13 @@ export default function App() {
             </div>
 
             <p style={{ fontSize: 12, color: BRAND.textMuted, margin: "0 0 8px" }}>{filteredCandidates.length} candidates</p>
+
+            {filteredCandidates.length === 0 && !loading && (
+              <div style={{ textAlign: "center", padding: "3rem 1rem", border: `1px dashed ${BRAND.border}`, borderRadius: 12 }}>
+                <p style={{ fontSize: 14, fontWeight: 600, color: BRAND.navy, margin: "0 0 6px" }}>No candidates yet</p>
+                <p style={{ fontSize: 13, color: BRAND.textMuted, margin: 0 }}>Paste a LinkedIn URL or job description above to start sourcing.</p>
+              </div>
+            )}
 
             {filteredCandidates.map(c => (
               <Card key={c.id} style={{ marginBottom: 8 }}>
