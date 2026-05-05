@@ -10,6 +10,10 @@ export default async function handler(req, res) {
 
   let rawText = "";
   try {
+    if (!req.body || !req.body.messages) {
+      return res.status(400).json({ error: "Missing messages in request body" });
+    }
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -19,17 +23,22 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
-        max_tokens: req.body.max_tokens || 1000,
+        max_tokens: req.body.max_tokens || 4000,
         messages: req.body.messages,
       }),
     });
 
     rawText = await response.text();
+
+    if (!rawText || rawText.trim() === "") {
+      return res.status(500).json({ error: "Anthropic returned an empty response" });
+    }
+
     let data;
     try {
       data = JSON.parse(rawText);
     } catch {
-      return res.status(500).json({ error: "Anthropic returned invalid JSON: " + rawText.slice(0, 200) });
+      return res.status(500).json({ error: "Anthropic returned invalid JSON: " + rawText.slice(0, 300) });
     }
 
     if (!response.ok) {
@@ -39,6 +48,6 @@ export default async function handler(req, res) {
     const text = data.content?.[0]?.text || "";
     return res.status(200).json({ content: [{ type: "text", text }] });
   } catch (err) {
-    return res.status(500).json({ error: "Fetch failed: " + err.message + (rawText ? " | Raw: " + rawText.slice(0, 200) : "") });
+    return res.status(500).json({ error: "Fetch failed: " + err.message + (rawText ? " | Raw: " + rawText.slice(0, 300) : "") });
   }
 }
