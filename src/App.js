@@ -72,15 +72,6 @@ const ProgressBar = ({ pct, color = BRAND.navy }) => (
   </div>
 );
 
-const sampleCandidates = [
-  { id: 1, name: "Alex Rivera",    title: "Senior Identity Engineer",    company: "Okta",          location: "Austin, TX",  source: "LinkedIn", match: 94, skills: ["OAuth","SAML","Zero Trust","Python"], github: { commits: 142, repos: 18, stars: 203 }, seniority: "Senior",    openToWork: true,  diverse: true,  email: "a.rivera@email.com",  stage: "sourced",     notes: "",                       outreachSent: false, ghId: null },
-  { id: 2, name: "Priya Nair",     title: "Security Software Engineer",  company: "CrowdStrike",   location: "Remote",      source: "GitHub",   match: 91, skills: ["Rust","PKI","MFA","Go"],             github: { commits: 289, repos: 31, stars: 412 }, seniority: "Senior",    openToWork: false, diverse: true,  email: "p.nair@email.com",    stage: "contacted",   notes: "",                       outreachSent: true,  ghId: null },
-  { id: 3, name: "Marcus Chen",    title: "Identity Platform Engineer",  company: "Ping Identity", location: "Denver, CO",  source: "LinkedIn", match: 88, skills: ["FIDO2","WebAuthn","Node.js","AWS"],  github: { commits: 67,  repos: 12, stars: 89  }, seniority: "Staff",     openToWork: true,  diverse: false, email: "m.chen@email.com",    stage: "sourced",     notes: "",                       outreachSent: false, ghId: null },
-  { id: 4, name: "Jordan Smith",   title: "IAM Engineer",                company: "Sailpoint",     location: "Chicago, IL", source: "Indeed",   match: 85, skills: ["LDAP","Active Directory","C#"],      github: { commits: 34,  repos: 7,  stars: 22  }, seniority: "Senior",    openToWork: false, diverse: false, email: "j.smith@email.com",   stage: "responded",   notes: "Interested, scheduling", outreachSent: true,  ghId: null },
-  { id: 5, name: "Aisha Okonkwo",  title: "Auth Systems Engineer",       company: "Auth0",         location: "NYC",         source: "Web",      match: 82, skills: ["JWT","OpenID Connect","Java"],        github: { commits: 198, repos: 24, stars: 317 }, seniority: "Principal", openToWork: true,  diverse: true,  email: "a.okonkwo@email.com", stage: "interviewed", notes: "Strong technical round", outreachSent: true,  ghId: null },
-  { id: 6, name: "Tomas Novak",    title: "Cybersecurity Engineer",      company: "ForgeRock",     location: "Boston, MA",  source: "GitHub",   match: 79, skills: ["PAM","Vault","Terraform","Python"],  github: { commits: 445, repos: 52, stars: 678 }, seniority: "Senior",    openToWork: false, diverse: false, email: "t.novak@email.com",   stage: "sourced",     notes: "",                       outreachSent: false, ghId: null },
-];
-
 export default function App() {
   const [tab, setTab] = useState("Source");
   const [candidates, setCandidates] = useState([]);
@@ -115,8 +106,13 @@ export default function App() {
     return d;
   };
 
+  // ── Now calling /api/anthropic instead of /api/openai ─────────────────────
   const claudeFetch = async (messages, max_tokens = 1000) => {
-    const r = await fetch("/api/openai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens, messages }) });
+    const r = await fetch("/api/anthropic", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens, messages }),
+    });
     const d = await r.json();
     return d.content?.filter(b => b.type === "text").map(b => b.text).join("") || "";
   };
@@ -175,21 +171,22 @@ export default function App() {
     finally { setLoading(false); setLoadMsg(""); setProgress(0); }
   };
 
+  // ── Now calling /api/anthropic instead of /api/openai ─────────────────────
   const generateOutreach = async (c) => {
     setOutreachLoading(true); setOutreachDraft("");
     try {
-      const r = await fetch("/api/openai", {
+      const r = await fetch("/api/anthropic", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           max_tokens: 400,
-          messages: [{ role: "user", content: `Write a personalized LinkedIn outreach from a recruiter at Transmit Security to ${c.name}, ${c.title} at ${c.company}. Skills: ${c.skills.join(", ")}. Under 120 words, friendly, specific, no buzzwords. Just the message, no quotes.` }]
-        })
+          messages: [{ role: "user", content: `Write a personalized LinkedIn outreach from a recruiter at Transmit Security to ${c.name}, ${c.title} at ${c.company}. Skills: ${c.skills.join(", ")}. Under 120 words, friendly, specific, no buzzwords. Just the message, no quotes.` }],
+        }),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || "API error " + r.status);
       const text = data.content?.find(b => b.type === "text")?.text || "";
-      if (!text) throw new Error("Empty response from OpenAI");
+      if (!text) throw new Error("Empty response from Anthropic");
       setOutreachDraft(text);
     } catch (e) {
       showMsg("Outreach failed: " + e.message, false);
