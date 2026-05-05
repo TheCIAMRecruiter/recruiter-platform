@@ -162,7 +162,7 @@ export default function App() {
       const prompt = inputMode === "url"
         ? `LinkedIn slug: "${input.split("linkedin.com/in/")[1]?.replace(/\//g, "").split("?")[0] || input}". Generate 8 realistic similar candidates for Transmit Security (identity/cybersecurity).`
         : `Job description: "${input.slice(0, 400)}". Generate 8 realistic matching candidates.`;
-      const raw = await claudeFetch([{ role: "user", content: `You are a recruiting assistant for Transmit Security. ${prompt} Return ONLY a JSON array of 8 candidate objects, no markdown, no backticks. Each: {name,title,company,location,source("LinkedIn"|"GitHub"|"Indeed"|"Web"),match(60-98),skills(3-5 array),seniority("Junior"|"Senior"|"Staff"|"Principal"),openToWork(bool),diverse(bool),email,github:{commits,repos,stars},stage:"sourced",notes:"",outreachSent:false,ghId:null}` }]);
+      const raw = await claudeFetch([{ role: "user", content: `You are a recruiting assistant for Transmit Security. ${prompt} Return ONLY a JSON array of 8 candidate objects, no markdown, no backticks. Each: {name,title,company,location,source("LinkedIn"|"GitHub"|"Indeed"|"Web"),match(60-98),skills(3-5 array),seniority("Junior"|"Senior"|"Staff"|"Principal"),openToWork(bool),diverse(bool),email,github:{commits,repos,stars},stage:"sourced",notes:"",outreachSent:false,ghId:null}` }], 4000);
       clearInterval(tick); setProgress(100);
       const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
       const withIds = parsed.map((c, idx) => ({ ...c, id: Date.now() + idx }));
